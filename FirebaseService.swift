@@ -29,11 +29,11 @@ struct FirebaseService: AsyncTaskService {
         }
     }
     
-    func perform<T>(task: T, session: ContentProvider, respondOn: DispatchQueue, completion: @escaping (Result<T.Response, Error>) -> Void) where T : AsyncTask {
+    func perform<T>(task: T, session: ContentProvider) async throws -> T.Response where T : AsyncTask {
         if let task = task as? ARAnalyticsEventTask {
-            self.logEvent(task.input.name, parameters: task.input.parameters)
+            return self.logEvent(task.input.name, parameters: task.input.parameters) as! T.Response
         } else if let task = task as? ARAnalyticsScreenViewTask {
-            self.logScreenView(name: task.input.name, title: task.input.title)
+            return self.logScreenView(name: task.input.name, title: task.input.title) as! T.Response
         }
     }
     
